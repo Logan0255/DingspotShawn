@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html class="ui-mobile">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="css/jquery.mobile.flatui.css" />
+<style type="text/css">
+
+/**********************/
+/* Some useful mixins */
+/* Build the price tag */
+.price-tag {
+  display: inline-block;
+  -moz-border-radius-topright: 2px;
+  -webkit-border-top-right-radius: 2px;
+  border-top-right-radius: 2px;
+  -moz-border-radius-bottomright: 2px;
+  -webkit-border-bottom-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  height: 20px;
+  line-height: 20px;
+  padding: 0 5px;
+  color: #fff;
+  background-color: #bf1919;
+  text-shadow: 1px 1px 1px #921313;
+  font-weight: bold;
+  font-size: normal;
+  text-indent: -3px;
+  position: relative;
+  -moz-transform-origin: 88% 10%;
+  -ms-transform-origin: 88% 10%;
+  -webkit-transform-origin: 88% 10%;
+  transform-origin: 88% 10%;
+}
+
+.price-tag::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid #bf1919;
+}
+.price-tag::after {
+  content: "";
+  position: absolute;
+  top: 10%;
+  left: 88%;
+  width: 5px;
+  height: 5px;
+  border-radius: 2.5px;
+  background-color: #cecece;
+  box-shadow: inset -1px 1px 0 #8e8e8e;
+}
+
+
+/************star ranking****************/
+.food_rating .rated { background-color: yellow !important; }
+.food_rating .rating a { border: 0px !important; }
+
+.food_rating{
+  padding-left: 3%;
+  padding-bottom: 3%;
+}
+
+.food_rating a{
+    margin: 0;
+    border: 0;
+    /*background-size: 10% !important;*/
+    width: 20px;
+    height: 20px;
+}
+
+
+/* ===========================kingshark */
+#mypanel {
+    /*width: 30%;*/
+    border: 1px solid #000;
+    border-right: none;
+    background: rgba(0,0,0,.5);
+    margin: -1px 0;
+}
+
+.button-my {
+  margin-top: 0;
+  /*border-top: 0;*/
+}
+
+.my-menu {
+    background-color: lightgray;
+    /*border: 1px solid black;*/
+    /*height: 100px;*/
+    margin-bottom: 10px;
+    margin-left: 0;
+    /*font-weight: bold;*/
+    /*text-align: center;*/
+    /*padding: 30px;*/
+    border-radius:5px; 
+}
+
+.my-menu img{
+  width: 100%;
+}
+
+.my-menu>.block-menu-name{
+  width: 65%;
+  font-weight: bold;
+  font-size: small;
+  white-space: pre-wrap;
+  padding: 3%;
+  /*text-align: center;*/
+}
+
+.my-menu>.block-menu-price{
+  width: 35%;
+  padding: 5%;
+  font-size: small;
+  /*font-family: "Times New Roman", Times, serif;*/
+  color: red;
+  /*white-space: pre-wrap;*/
+  /*text-align: center;*/
+  padding-top: 5%;
+}
+
+.my-menu>.block-menu-desc{
+  width: 65%;
+  white-space: pre-wrap;
+  font-size: small;
+  padding: 3%;
+  /*text-align: center;*/
+}
+
+.my-menu>.block-menu-extra{
+  width: 35%;
+  padding: 3%;
+  /*white-space: pre-wrap;*/
+  /*text-align: center;*/
+}
+
+.my-menu>.block-menu-extra a[data-role=button]{
+  margin: 0;
+  border: 0;
+  padding: 2px;
+  margin: 5px;
+  text-align: left;
+
+  font-size: small;
+  font-weight: lighter;
+}
+
+.my-menu>.block-menu-ranking{
+  width: 65%;
+  /*white-space: pre-wrap;*/
+  font-size: small;
+  padding: 3%;
+  /*text-align: center;*/
+}
+
+</style>
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<script type="text/javascript" src="jquery-3.1.1.js"></script>
+<script type="text/javascript">
+  //Initialization: use Json to store data
+  var txt = '{"foodDetail":[' +
+                 '{ "foodNo":0, "foodName":"Oriental Salad in Special Vinegar Dressing" , "foodNumber":0 , "foodPrice":10},' + 
+                 '{ "foodNo":1, "foodName":"Fragrant Pork with Crushed Garlic" , "foodNumber":0, "foodPrice":10},' +
+                 '{ "foodNo":2, "foodName":"Green Chillies with Marinated Stuffed Minced Meat" , "foodNumber":0, "foodPrice":10},' + 
+                 '{ "foodNo":3, "foodName":"Sliced Duck in Crispy Spring Onion Pastry" , "foodNumber":0, "foodPrice":12},' + 
+                 '{ "foodNo":4, "foodName":"Special Braised Beef Noodle Soup with Beef Brisket" , "foodNumber":0, "foodPrice":10},' + 
+                 '{ "foodNo":5, "foodName":"Noodle Soup with Fried Pork Chop" , "foodNumber":0, "foodPrice":10},' + 
+                 '{ "foodNo":6, "foodName":"Noodle with Spicy Sauce" , "foodNumber":0, "foodPrice":10},' + 
+                 '{ "foodNo":7, "foodName":"Fried Rice with Shrimps and Eggs" , "foodNumber":0, "foodPrice":12},' + 
+                 '{ "foodNo":8, "foodName":"Noodle with Minced Pork in Bean Sauce" , "foodNumber":0, "foodPrice":11},' + 
+                 '{ "foodNo":9, "foodName":"Steamed Chilli Crab and Pork Buns" , "foodNumber":0, "foodPrice":10},' + 
+                 '{ "foodNo":10, "foodName":"Steamed Red Bean Paste Buns" , "foodNumber":0, "foodPrice":10},' + 
+                 '{ "foodNo":11, "foodName":"Steamed Vegetable and Pork Dumplings" , "foodNumber":0, "foodPrice":10},' +  
+                 '{ "foodNo":12, "foodName":"Double-Boiled Papaya and Snow Fungus with Rock Sugar" , "foodNumber":0, "foodPrice":8},' + 
+                 '{ "foodNo":13, "foodName":"Roselle Drink" , "foodNumber":0, "foodPrice":8},' + 
+                 '{ "foodNo":14, "foodName":"Mango Pudding" , "foodNumber":0, "foodPrice":8},' + 
+                 '{ "foodNo":15, "foodName":"Oriental Wontons with Black Vinegar and Chilli Oil" , "foodNumber":0, "foodPrice":9},' + 
+                 '{ "foodNo":16, "foodName":"Deep-fried Specially Marinated Pork Chop" , "foodNumber":0, "foodPrice":10},' + 
+                 '{ "foodNo":17, "foodName":"Soy Marinated Shanghainese Smoked Fish" , "foodNumber":0, "foodPrice":13}]}';
+  var foodTotal = eval ("(" + txt + ")");
+  var total_price = 0;
+
+  //listener: add button in menu panel and shoppingcart panel
+  $(document).ready(function(){
+    $("div.addOneClass").click(function(){
+      var tempNo = 0;
+      tempNo = parseInt($(this).children().next().html());
+      foodTotal.foodDetail[tempNo].foodNumber = foodTotal.foodDetail[tempNo].foodNumber + 1;
+      total_price += foodTotal.foodDetail[tempNo].foodPrice;
+      update_shoppingcart_item(tempNo);      
+      alert("Add successfully.");     
+    })
+  })
+
+  //listener: reduce button in shoppingcart panel
+  $(document).ready(function(){
+    $("div.reduceOneClass").click(function(){
+      var tempNo = 0;
+      tempNo = parseInt($(this).children().next().html());
+      foodTotal.foodDetail[tempNo].foodNumber = foodTotal.foodDetail[tempNo].foodNumber - 1;
+      total_price -= foodTotal.foodDetail[tempNo].foodPrice;
+      update_shoppingcart_item(tempNo);
+      alert("Reduce successfully.");     
+    })
+  })
+
+  //update selected No. records in shoppingcart
+  function update_shoppingcart_item(update_No){
+    var new_item_No = parseInt(update_No);
+    var new_item_content = "<p>" + foodTotal.foodDetail[new_item_No].foodName + " X " + foodTotal.foodDetail[new_item_No].foodNumber.toString() + "   $" + foodTotal.foodDetail[new_item_No].foodPrice * foodTotal.foodDetail[new_item_No].foodNumber + "</p>";
+    // update data displayed in html
+    var update_class_name = "div.shoppingcart-item-" + new_item_No.toString(); 
+    $(update_class_name + " p").html(new_item_content); 
+    // judge visible or not
+    var update_id_name = "id-shoppingcart-item-" + new_item_No.toString();
+    if(foodTotal.foodDetail[new_item_No].foodNumber>0){
+      document.getElementById(update_id_name).style.display="";//visible
+    }else{
+      document.getElementById(update_id_name).style.display="none";//invisible
+    }  
+    $("div.total-price p").html("$"+ total_price);
+  }
+//display all ordered food
+</script>
+
+</head>
+
+  <body>
+    <div data-role="page" >
+
+      <div data-role="panel" id="mypanel" data-position="right" data-display="overlay" data-theme="b" class="highlight">
+          <!-- panel content goes here -->
+      </div>
+
+      <div data-role="header">
+        <a href="#" data-role="button"  ><span class="ui-icon ui-icon-flat-man ui-icon-shadow"></span>Shawn</a>
+        <h1>DingSpot</h1>
+
+        <div class="ui-btn-right" data-role="controlgroup" data-type="horizontal">
+          <!-- <a href="#" data-iconpos="notext" data-role="button"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a> -->
+          <a data-iconpos="notext" href="#mypanel" data-role="button"><span class="ui-btn-inner"><span class="ui-btn-text"></span><span class="ui-icon ui-icon-flat-menu ui-icon-shadow">&nbsp;</span></span></a>
+        </div>
+
+        
+      </div>
+
+      <div data-role="content">
+
+        <!-- <p>我是一名移动开发者！</p> -->
+
+        <ul data-role="listview" data-inset="true" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+          <li data-role="list-divider" data-theme="a" role="heading" class="ui-li ui-li-divider ui-bar-a ui-first-child">Welcome to Shawn's Cuisine </li>
+          <li class="ui-li ui-li-static ui-btn-up-c"> 
+              <!-- shoppingcart panel -->
+              <div data-role="popup" id="shoppingcart_display" data-position="right" data-display="overlay" data-theme="b">
+              </div>             
+              <!-- shoppingcart panel ending-->
+
+              <div class="ui-grid-a">
+<!--               <div class="ui-block-a"><span>You are at Table #10 </span></div>
+              <div class="ui-block-b"> -->
+              <div class="ui-block"><span>You are Table #10</span></div>
+              <div class="ui-block">
+                <!-- <a href="#shoppingcart_display" data-rel="popup" data-role="button" data-theme="d" class="button-my"><i class="fa fa-cutlery" aria-hidden="true"></i>3</a> -->
+                <div data-role="collapsible" data-content-theme="false" data-collapsed-icon="carat-d" data-expanded-icon="carat-u" href="shoppingcart_display" id="display_collapse">
+                  <h4>Shoppingcart</h4>    
+                  <div class="ui-grid-b my-shoppingcart">
+                    <div class="shoppingcart-item-0" style="display: none;" id="id-shoppingcart-item-0">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">0</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">0</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-1" style="display: none;" id="id-shoppingcart-item-1">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">1</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">1</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-2" style="display: none;" id="id-shoppingcart-item-2">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">2</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">2</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-3" style="display: none;" id="id-shoppingcart-item-3">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">3</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">3</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-4" style="display: none;" id="id-shoppingcart-item-4">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">4</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">4</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-5" style="display: none;" id="id-shoppingcart-item-5">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">5</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">5</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-6" style="display: none;" id="id-shoppingcart-item-6">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">6</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">6</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-7" style="display: none;" id="id-shoppingcart-item-7">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">7</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">7</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-8" style="display: none;" id="id-shoppingcart-item-8">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">8</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">8</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-9" style="display: none;" id="id-shoppingcart-item-9">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">9</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">9</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-10" style="display: none;" id="id-shoppingcart-item-10">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">10</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">10</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-11" style="display: none;" id="id-shoppingcart-item-11">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">11</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">11</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-12" style="display: none;" id="id-shoppingcart-item-12">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">12</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">12</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-13" style="display: none;" id="id-shoppingcart-item-13">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">13</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">13</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-14" style="display: none;" id="id-shoppingcart-item-14">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">14</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">14</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-15" style="display: none;" id="id-shoppingcart-item-15">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">15</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">15</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-16" style="display: none;" id="id-shoppingcart-item-16">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">16</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">16</div>
+                      </div>             
+                    </div>
+                    <div class="shoppingcart-item-17" style="display: none;" id="id-shoppingcart-item-17">  
+                      <p></p>
+                      <div class="ui-grid-solo addOneClass">
+                        <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">17</div>
+                      </div>  
+                      <div class="ui-grid-solo reduceOneClass">
+                        <a href="#"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a>
+                        <div style="display: none;">17</div>
+                      </div>             
+                    </div>
+                  </div>
+                  <div class="total-price">
+                    <h4>Total Price:</h4>
+                    <p>$0</p>
+                  </div>
+                </div>
+                <!-- <button data-icon="flat-mail" data-theme="d" class="ui-btn-hidden" data-disabled="false">Button D</button> -->
+              </div>
+            </div>          
+          </li>
+        </ul>
+
+        <!-- menu list -->
+        <ul data-role="listview" data-inset="true"  data-theme="a">
+            <li data-role="list-divider" data-theme="a" role="heading" ><i class="fa fa-book" aria-hidden="true"></i>Menu</li>
+            
+            <!-- food type 1: Appetizers -->
+            <li>     
+
+              <div data-role="popup" id="add_food_reminder">
+                <p>The food has been added into shoppingcart:)</p>
+              </div>
+
+              <div data-role="collapsible" data-content-theme="false" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                <h4>Appetizers</h4>
+                <br/>
+
+                  <!-- my menu for one food food000 -->
+                  <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food000 detail -->
+                      <div data-role="popup" id="food_000_detail">
+                        <p>Not spicy. </p>
+                      </div>
+
+                      <div data-role="popup" id="food_000_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food000.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" ><span>Oriental Salad in Special Vinegar Dressing</span></div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $10
+                        </div>
+                        <!-- Hide the foodNo so that foodNo can be caught by fucntion to update Json -->
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">0</div>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >A perennially popular appetiser with a simple mix of julienne seaweed, bean sprouts, chilli, beancurd strips and rice vermicelli, tossed in a light, tangy dressing that boasts a myriad of flavours all in one serving.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_000_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_000_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext" class="rated"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food000-->
+
+                <!-- my menu for one food food001 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food001 detail -->
+                      <div data-role="popup" id="food_001_detail">
+                        <p>Midium spicy. </p>
+                      </div>
+
+                      <div data-role="popup" id="food_001_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food001.jpg" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Fragrant Pork with Crushed Garlic</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $10
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">1</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >A delightful cold dish consisting of thin slivers of succulent poached pork enveloping crunchy cucumbers and topped with garlic sauce, sesame and spring onions.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_001_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_001_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext" class="rated"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food001-->
+
+                <!-- my menu for one food food002 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food002 detail -->
+                      <div data-role="popup" id="food_002_detail">
+                        <p>Light spicy.</p>
+                      </div>
+
+                      <div data-role="popup" id="food_002_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food002.jpg" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Green Chillies with Marinated Stuffed Minced Meat</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $10
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">2</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Created specially to suit the Thai palate, this popular dish is now available in Singapore and features an exciting fusion of sweet, sour and spice. Promises to whet your appetite!</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_002_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_002_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food002-->
+
+                <!-- my menu for one food food003 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food003 detail -->
+                      <div data-role="popup" id="food_003_detail">
+                        <p>Not spicy.</p>
+                      </div>
+
+                      <div data-role="popup" id="food_003_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food003.jpg" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Sliced Duck in Crispy Spring Onion Pastry</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $12
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">3</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Slivers of smoked duck and spring onions are wrapped in a crispy spring roll skin. The addition of spring onions introduces a light fragrance to this appetiser.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_003_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_003_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food003-->
+
+              </div>
+
+            </li>
+            <!-- /one type food --> 
+
+            <!-- food type 2: Noodles and Rice -->
+            <li>          
+              <div data-role="collapsible" data-content-theme="false" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                <h4>Noodles and Rice</h4>
+                <br/>
+                
+                <!-- my menu for one food food004 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food004 detail -->
+                      <div data-role="popup" id="food_004_detail">
+                        <p>Light spicy.</p>
+                      </div>
+
+                      <div data-role="popup" id="food_004_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food004.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Special Braised Beef Noodle Soup with Beef Brisket</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $10
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">4</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Succulent juicy meat with noodles immersed in a bowl of flavourful soup – indeed a hearty meal on its own.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_004_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_004_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food004-->
+
+                <!-- my menu for one food food005 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food005 detail -->
+                      <div data-role="popup" id="food_005_detail">
+                        <p>Not spicy.</p>
+                      </div>
+
+                      <div data-role="popup" id="food_005_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food005.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Noodle Soup with Fried Pork Chop</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $10
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">5</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Our legendary noodles are featured here with our signature fried pork chop marinated with complex spices. A hearty yet wholesome twosome to slurp up with gusto.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_005_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_005_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext" class="rated"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food005-->
+
+                <!-- my menu for one food food006 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food006 detail -->
+                      <div data-role="popup" id="food_006_detail">
+                        <p>Midium spicy.</p>
+                      </div>
+
+                      <div data-role="popup" id="food_006_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food006.jpg" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Noodle with Spicy Sauce</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $10
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">6</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Another specialty noodle originally created for Thai taste buds, this noodle dish has found its way into the hearts and stomachs of Southeast Asian diners. There is just a hint of fragrant sweetness in the spicy sauce to complement the springy hand-cooked noodle.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_006_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_006_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food006-->
+
+                <!-- my menu for one food food007 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food007 detail -->
+                      <div data-role="popup" id="food_007_detail">
+                        <p>Not spicy.</p>
+                      </div>
+
+                      <div data-role="popup" id="food_007_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food007.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Fried Rice with Shrimps and Eggs</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $12
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">7</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >An extremely popular dish, the ingredients are pared down to simple rice, shrimps, eggs, and spring onions, creating a taste of familiar comfort. Each plate is of a certain weight and minimal seasoning is used so that the natural fragrance of the eggs and spring onions shines through.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_007_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_007_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food007-->
+
+                <!-- my menu for one food food008 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food008 detail -->
+                      <div data-role="popup" id="food_008_detail">
+                        <p>Light spicy.</p>
+                      </div>
+
+                      <div data-role="popup" id="food_008_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food008.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Noodle with Minced Pork in Bean Sauce</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $11
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">8</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Handmade noodles cooked to a pleasantly springy consistency tossed with minced pork in bean sauce, makes this a satisfying meal.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_008_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_008_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food008-->
+
+              </div>
+
+            </li>
+            <!-- /one type food --> 
+
+            <!-- food type 3: Steamed Dumplings and Buns-->
+            <li>          
+              <div data-role="collapsible" data-content-theme="false" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                <h4>Steamed Dumplings and Buns</h4>
+                <br/>
+                
+                <!-- my menu for one food food009 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food009 detail -->
+                      <div data-role="popup" id="food_009_detail">
+                        <p>Not spicy. </p>
+                      </div>
+
+                      <div data-role="popup" id="food_009_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food009.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Steamed Chilli Crab and Pork Buns</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $10
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">9</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >The national favourite, chunks of chilli crab is mixed with fresh pork and packed into a steaming hot bun. A savoury gravy-filled treat with a touch of heat.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_009_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_009_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food009-->
+
+                <!-- my menu for one food food010 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food010 detail -->
+                      <div data-role="popup" id="food_010_detail">
+                        <p>Not spicy. </p>
+                      </div>
+
+                      <div data-role="popup" id="food_010_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food010.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Steamed Red Bean Paste Buns</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $10
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">10</div>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Using finest red bean paste stuffed into a steaming hot bun. A delightful treat for the sweet tooth.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_010_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_010_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext" class="rated"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food010-->
+
+                <!-- my menu for one food food011 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food011 detail -->
+                      <div data-role="popup" id="food_011_detail">
+                        <p>Not spicy. </p>
+                      </div>
+
+                      <div data-role="popup" id="food_011_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food011.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Steamed Vegetable and Pork Dumplings</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $10
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">11</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Delicately handmade with precision, the Steamed Vegetable and Pork Dumplings are juicy with delectable delights of savoury premium meat and fragrant Chinese cabbage.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_011_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_011_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food011-->
+
+ 
+
+              </div>
+
+            </li>
+            <!-- /one type food --> 
+
+            <!-- food type 4: Desserts and Beverages -->
+            <li>          
+              <div data-role="collapsible" data-content-theme="false" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                <h4>Desserts and Beverages</h4>
+                <br/>
+                
+                <!-- my menu for one food food012 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food012 detail -->
+                      <div data-role="popup" id="food_012_detail">
+                        <p>Hot.</p>
+                      </div>
+
+                      <div data-role="popup" id="food_012_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food012.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Double-Boiled Papaya and Snow Fungus with Rock Sugar</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $8
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">12</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Excellent for the complexion and balancing of the inner soul, this is a healing dessert that is perfect for rounding up a simple lunch or dinner.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_012_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_012_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food012-->
+
+                <!-- my menu for one food food013 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food013 detail -->
+                      <div data-role="popup" id="food_013_detail">
+                        <p>Icy.</p>
+                      </div>
+
+                      <div data-role="popup" id="food_013_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food013.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Roselle Drink</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $8
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">13</div>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Seldom found locally, this drink is packed with ingredients that are known to lower blood pressure, aid digestion and refine complexion – perfect for the health conscious.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_013_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_013_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext" class="rated"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food013-->
+
+                <!-- my menu for one food food014 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food014 detail -->
+                      <div data-role="popup" id="food_014_detail">
+                        <p>room temperature.</p>
+                      </div>
+
+                      <div data-role="popup" id="food_014_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food014.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Mango Pudding</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $8
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">14</div>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Using a specially sweet and fragrant local variety, the mangos are freshly imported from Thailand for the sole purpose of creating this gem of a dessert. Made with pure mango flesh, the select variety makes for a luscious pudding, with a heady aroma of freshly peeled mango.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_014_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_014_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food014-->
+
+              </div>
+
+            </li>
+            <!-- /one type food --> 
+
+            <!-- food type 5: Snacks-->
+            <li>          
+              <div data-role="collapsible" data-content-theme="false" data-collapsed-icon="carat-d" data-expanded-icon="carat-u">
+                <h4>Snacks</h4>
+                <br/>
+                
+                <!-- my menu for one food food015 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food015 detail -->
+                      <div data-role="popup" id="food_015_detail">
+                        <p>Midium spicy.</p>
+                      </div>
+
+                      <div data-role="popup" id="food_015_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food015.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Oriental Wontons with Black Vinegar and Chilli Oil</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $9
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">15</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Savour this piquant dish of delicately wrapped wontons in a distinctly flavourful mix of vinegar and chilli oil.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_015_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_015_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext" class="rated"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food015-->
+
+                <!-- my menu for one food food016 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food016 detail -->
+                      <div data-role="popup" id="food_016_detail">
+                        <p>Not spicy. </p>
+                      </div>
+
+                      <div data-role="popup" id="food_016_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food016.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Deep-fried Specially Marinated Pork Chop</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $10
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">16</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >Munch away on this scrumptious dish of deeply marinated pork chop, which is deep-fried to perfection. The meat is juicy and tender, making for a wholesome gastronomic experience.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_016_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_016_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext" class="rated"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food016-->
+
+                <!-- my menu for one food food017 -->
+                <div class="ui-grid-b my-menu">
+                      <!-- popup section -->
+                      <!-- food017 detail -->
+                      <div data-role="popup" id="food_017_detail">
+                        <p>Not spicy. </p>
+                      </div>
+
+                      <div data-role="popup" id="food_017_img" data-overlay-theme="b" data-theme="b" data-corners="false">
+                        <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="img/food/food017.png" style="max-height:512px;" alt="Food Image">
+                      </div>
+                      <!-- /popup section -->
+
+                      <!-- food card row1 -->
+                      <div class="ui-block-a block-menu-name" >Soy Marinated Shanghainese Smoked Fish</div>
+                      <div class="ui-block-b block-menu-price" >
+                        <div class="price-tag">
+                          $13
+                        </div>
+
+                        <div class="ui-grid-solo addOneClass">
+                            <a href="#"><i class="fa fa-plus-circle fa-2x" aria-hidden="true"></i></a>
+                            <div style="display: none;">17</div>
+                        </div>
+
+
+                      </div>
+
+                      <!-- food card row2 -->
+                      <div class="ui-block-a block-menu-desc" >With every slice cut to precision, this leather jacket aquatic delicacy is served with Taiwan imported soy sauce which boosts a rich blend of flavours. With the rich aroma from the rice wine marination, its bound to whet your appetite.</div>
+                      <div class="ui-block-b block-menu-extra" >                       
+                        <div class="ui-grid-solo my-menu-detail">
+                          <a href="#food_017_detail" data-role="button" data-theme="b" data-rel="popup" data-transition="pop">detail</a>
+                        </div>
+
+                        <div class="ui-grid-solo my-menu-img">
+                          <a href="#food_017_img" data-role="button" data-theme="b" data-rel="popup" data-position-to="window" data-transition="fade"><!-- <i class="fa fa-eye" aria-hidden="true"></i> --><span>photo</span></a>
+                        </div>
+
+                      </div>
+
+                      <!-- food card row3 -->
+                      <div class="ui-block-a block-menu-ranking" >
+                        ranking:
+                        <div class="food_rating" id="first">
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="1" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="2" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="3" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="4" data-iconpos="notext" class="rated"></a>
+                          <a href="#" data-role="button" data-inline="true" data-icon="star" data-vote="5" data-iconpos="notext" class="rated"></a>
+                        </div>
+                      </div>
+                </div>
+                <!-- /my menu for one food food017-->
+              </div>
+
+            </li>
+            <!-- /one type food --> 
+
+        </ul>
+      <div data-role="footer">
+        <!-- <h1>页脚文本</h1> -->
+      </div>
+    </div>
+  </body>
+</html>
